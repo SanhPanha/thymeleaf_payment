@@ -15,8 +15,8 @@ public class PaymentService {
     @Autowired
     private PaymentRepository repository;
 
-    public Page<Payment> fetchPayments(int page, int size, String dateFrom, String dateTo, String currency) {
-        List<Payment> payments = repository.getAllPayments(dateFrom, dateTo, currency);
+    public Page<Payment> fetchPayments(int page, int size, String dateFrom, String dateTo, String currency, int pageSize, int pageNumber) {
+        List<Payment> payments = repository.getAllPayments(dateFrom, dateTo, currency, pageSize, pageNumber);
 
         if (payments.isEmpty()) {
             return new PageImpl<>(List.of(), PageRequest.of(page, size), 0);

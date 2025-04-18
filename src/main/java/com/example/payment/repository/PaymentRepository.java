@@ -15,9 +15,9 @@ public class PaymentRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Payment> getAllPayments(String dateFrom, String dateTo, String currency) {
+    public List<Payment> getAllPayments(String dateFrom, String dateTo, String currency, int pageSize, int pageNumber) {
         return jdbcTemplate.execute((Connection conn) -> {
-            CallableStatement cs = conn.prepareCall("{call GET_PAYMENTS(?, ?, ?, ?)}");
+            CallableStatement cs = conn.prepareCall("{call GET_PAYMENTS_PAGINATION(?, ?, ?, ?, ?)}");
 
             // Set p_date_from
             if (dateFrom != null && !dateFrom.isEmpty()) {

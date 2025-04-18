@@ -23,12 +23,14 @@ public class PaymentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String currency,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "0") int pageNumber,
             Model model) {
 
         // Fetching available currencies dynamically
         List<String> currencies = paymentService.fetchAllCurrencies();
 
-        Page<Payment> paymentsPage = paymentService.fetchPayments(page, size, dateFrom, dateTo, currency);
+        Page<Payment> paymentsPage = paymentService.fetchPayments(page, size, dateFrom, dateTo, currency, pageSize, pageNumber);
 
         model.addAttribute("payments", paymentsPage.getContent());
         model.addAttribute("currentPage", page);
