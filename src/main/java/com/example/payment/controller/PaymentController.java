@@ -1,5 +1,4 @@
 package com.example.payment.controller;
-
 import com.example.payment.model.Payment;
 import com.example.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 
 @Controller
@@ -24,6 +25,9 @@ public class PaymentController {
             @RequestParam(required = false) String currency,
             Model model) {
 
+        // Fetching available currencies dynamically
+        List<String> currencies = paymentService.fetchAllCurrencies();
+
         Page<Payment> paymentsPage = paymentService.fetchPayments(page, size, dateFrom, dateTo, currency);
 
         model.addAttribute("payments", paymentsPage.getContent());
@@ -35,6 +39,9 @@ public class PaymentController {
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("currency", currency);
+
+        // Passing the list of currencies to the view
+        model.addAttribute("currencies", currencies);
 
         return "payments";
     }

@@ -26,21 +26,36 @@
     <!-- Filter Card -->
     <form method="get" action="/payments" class="bg-white px-6 pt-6 shadow-md">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+            <!-- Date From -->
             <div>
                 <label class="text-sm font-medium block mb-1">Date From</label>
                 <input type="date" name="dateFrom" th:value="${dateFrom}"
                        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none" />
             </div>
+
+            <!-- Date To -->
             <div>
                 <label class="text-sm font-medium block mb-1">Date To</label>
                 <input type="date" name="dateTo" th:value="${dateTo}"
                        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none" />
             </div>
+
+            <!-- Currency -->
             <div>
                 <label class="text-sm font-medium block mb-1">Currency</label>
-                <input type="text" name="currency" th:value="${currency}" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none" />
+                <select name="currency"
+                        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none">
+                        <option value="">-- All --</option>
+                    <option th:each="cur : ${currencies}"
+                            th:value="${cur}"
+                            th:text="${cur}"
+                            th:selected="${cur == currency}">
+                    </option>
+                </select>
             </div>
-            <div class="flex items-end space-x-4">
+
+            <div class="flex  items-end space-x-4">
                 <button type="submit"
                         class="bg-blue-900 text-white px-4 py-2 w-full rounded hover:bg-blue-800 text-sm font-medium">
                     Display
@@ -55,79 +70,84 @@
     </form>
 
 
+
     <!-- Table -->
     <div class="bg-white shadow-md py-9 rounded-b-lg overflow-x-auto ">
 
         <div class="px-4 pt-4  space-y-6">
-            <form method="get" id="entriesForm">
-                <select name="size" onchange="document.getElementById('entriesForm').submit()" class="border rounded px-2 py-1">
-                    <option th:selected="${pageSize == 10}" value="10">10</option>
-                    <option th:selected="${pageSize == 25}" value="25">25</option>
-                    <option th:selected="${pageSize == 50}" value="50">50</option>
-                </select>
-                entries per page
-
-                <input type="hidden" name="page" th:value="${currentPage}" />
-                <input type="hidden" name="dateFrom" th:value="${dateFrom}" />
-                <input type="hidden" name="dateTo" th:value="${dateTo}" />
-                <input type="hidden" name="currency" th:value="${currency}" />
-            </form>
 
             <table class="min-w-full text-sm text-left border-t border-gray-200">
-            <thead class="bg-gray-100 text-xs text-gray-600 uppercase tracking-wider">
-            <tr>
-                <th class="px-4 py-3">ACLEDA</th>
-                <th class="px-4 py-3">ID</th>
-                <th class="px-4 py-3">Name</th>
-                <th class="px-4 py-3">PAID DATE</th>
-                <th class="px-4 py-3">Paid Time</th>
-                <th class="px-4 py-3">Amount</th>
-                <th class="px-4 py-3">Currency</th>
-                <th class="px-4 py-3">Reference No</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="p : ${payments}" class="border-t hover:bg-gray-50">
-                <td class="px-4 py-2" th:text="${p.acleda}"></td>
-                <td class="px-4 py-2" th:text="${p.id}"></td>
-                <td class="px-4 py-2" th:text="${p.name}"></td>
-                <td class="px-4 py-2" th:text="${#dates.format(p.paidDate, 'dd-MMM-yyyy')}"></td>
-                <td class="px-4 py-2" th:text="${#dates.format(p.paidTime, 'hh:mm:ss a')}"></td>
-                <td class="px-4 py-2" th:text="${p.amount}"></td>
-                <td class="px-4 py-2" th:text="${p.currency}"></td>
-                <td class="px-4 py-2" th:text="${p.referceNo}"></td>
-            </tr>
-            </tbody>
-        </table>
+                <thead class="bg-gray-100 text-xs text-gray-600 uppercase tracking-wider">
+                    <tr>
+                        <th class="px-4 py-3">ACLEDA</th>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">PAID DATE</th>
+                        <th class="px-4 py-3">Paid Time</th>
+                        <th class="px-4 py-3">Amount</th>
+                        <th class="px-4 py-3">Currency</th>
+                        <th class="px-4 py-3">Reference No</th>
+                    </tr>
+                </thead>
 
-            <!-- Pagination -->
-            <div class="space-x-1 mt-4">
+                <tbody>
+                    <tr th:each="p : ${payments}" class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2" th:text="${p.acleda}"></td>
+                    <td class="px-4 py-2" th:text="${p.id}"></td>
+                    <td class="px-4 py-2" th:text="${p.name}"></td>
+                    <td class="px-4 py-2" th:text="${#dates.format(p.paidDate, 'dd-MMM-yyyy')}"></td>
+                    <td class="px-4 py-2" th:text="${#dates.format(p.paidTime, 'hh:mm:ss a')}"></td>
+                    <td class="px-4 py-2" th:text="${p.amount}"></td>
+                    <td class="px-4 py-2" th:text="${p.currency}"></td>
+                    <td class="px-4 py-2" th:text="${p.referceNo}"></td>
+                </tr>
+                </tbody>
+            </table>
 
-                <a th:href="@{/payments(page=0, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
-                   th:if="${currentPage > 0}"
-                   class="px-2 py-1 border rounded hover:bg-gray-200">&laquo;</a>
+            <div class="w-full flex justify-between">
+                <!--     Page size       -->
+                <form method="get" id="entriesForm">
+                    <select name="size" onchange="document.getElementById('entriesForm').submit()" class="border rounded px-2 py-1">
+                        <option th:selected="${pageSize == 10}" value="10">10</option>
+                        <option th:selected="${pageSize == 25}" value="25">25</option>
+                        <option th:selected="${pageSize == 50}" value="50">50</option>
+                    </select>
+                    entries per page
 
-                <a th:href="@{/payments(page=${currentPage - 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
-                   th:if="${currentPage > 0}"
-                   class="px-2 py-1 border rounded hover:bg-gray-100">&lt;</a>
+                    <input type="hidden" name="page" th:value="${currentPage}" />
+                    <input type="hidden" name="dateFrom" th:value="${dateFrom}" />
+                    <input type="hidden" name="dateTo" th:value="${dateTo}" />
+                    <input type="hidden" name="currency" th:value="${currency}" />
+                </form>
 
-                <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-        <a th:href="@{/payments(page=${i}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo}, currency=${currency})}"
+                <!-- Pagination -->
+                <div class="space-x-1 mt-4">
 
-           th:text="${i + 1}"
-           th:class="${i == currentPage} ? 'px-3 py-1 border rounded bg-blue-900 text-white' : 'px-2 py-1 border rounded hover:bg-gray-100'">
-        </a>
-    </span>
+                    <a th:href="@{/payments(page=0, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
+                       th:if="${currentPage > 0}"
+                       class="px-2 py-1 border rounded hover:bg-gray-200">&laquo;</a>
 
-                <a th:href="@{/payments(page=${currentPage + 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
-                   th:if="${currentPage < totalPages - 1}"
-                   class="px-2 py-1 border rounded hover:bg-gray-100">&gt;</a>
+                    <a th:href="@{/payments(page=${currentPage - 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
+                       th:if="${currentPage > 0}"
+                       class="px-2 py-1 border rounded hover:bg-gray-100">&lt;</a>
 
-                <a th:href="@{/payments(page=${totalPages - 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
-                   th:if="${currentPage < totalPages - 1}"
-                   class="px-2 py-1 border rounded hover:bg-gray-200">&raquo;</a>
+                    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+
+                <a th:href="@{/payments(page=${i}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo}, currency=${currency})}"
+
+                   th:text="${i + 1}"
+                   th:class="${i == currentPage} ? 'px-3 py-1 border rounded bg-blue-900 text-white' : 'px-2 py-1 border rounded hover:bg-gray-100'">
+        </a></span>
+
+                    <a th:href="@{/payments(page=${currentPage + 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
+                       th:if="${currentPage < totalPages - 1}"
+                       class="px-2 py-1 border rounded hover:bg-gray-100">&gt;</a>
+
+                    <a th:href="@{/payments(page=${totalPages - 1}, size=${pageSize}, dateFrom=${dateFrom}, dateTo=${dateTo},  currency=${currency})}"
+                       th:if="${currentPage < totalPages - 1}"
+                       class="px-2 py-1 border rounded hover:bg-gray-200">&raquo;</a>
+                </div>
             </div>
-
 
         </div>
 

@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
 public class PaymentRepository {
     @Autowired
-
     private JdbcTemplate jdbcTemplate;
 
     public List<Payment> getAllPayments(String dateFrom, String dateTo, String currency) {
@@ -67,5 +65,9 @@ public class PaymentRepository {
         });
     }
 
+    public List<String> getAllCurrencies() {
+        String sql = "SELECT DISTINCT CURRENCY FROM PAYMENT";
 
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 }
