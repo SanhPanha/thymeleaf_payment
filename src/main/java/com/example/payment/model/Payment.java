@@ -1,7 +1,6 @@
 package com.example.payment.model;
 
 import lombok.Data;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
